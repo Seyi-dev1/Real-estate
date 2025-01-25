@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const ExploreTab = () => {
+const ProfileTab = () => {
   return (
     <View>
-      <Text>ExploreTab</Text>
+      <Text>ProfileTab</Text>
     </View>
   );
 };
 
-export default ExploreTab;
+export default ProfileTab;
 
 const styles = StyleSheet.create({});

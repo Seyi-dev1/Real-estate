@@ -1,45 +1,70 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import SignInScreen from "../signInScreen";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+const RootLayout = () => {
+  const [user, setUser] = useState<boolean>(false);
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
+  return user ? (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        headerShadowVisible: false,
+        tabBarActiveTintColor: "purple",
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          headerTitleAlign: "center",
+          headerTitle: "Home",
+          tabBarIcon: ({ focused, color }) => (
+            <Ionicons
+              name={focused ? "home-sharp" : "home-outline"}
+              size={25}
+              color={color}
+            />
+          ),
         }}
       />
+
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          headerTitleAlign: "center",
+          headerTitle: "Explore",
+          tabBarIcon: ({ focused, color }) => (
+            <Ionicons
+              name={focused ? "airplane-sharp" : "airplane-outline"}
+              size={25}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: "Profile",
+          tabBarIcon: ({ focused, color }) => (
+            <Ionicons
+              name={focused ? "person-circle-sharp" : "person-circle-outline"}
+              size={25}
+              color={color}
+            />
+          ),
         }}
       />
     </Tabs>
+  ) : (
+    <SignInScreen />
   );
-}
+};
+
+export default RootLayout;
+
+const styles = StyleSheet.create({});
