@@ -71,7 +71,7 @@ export const logout = async () => {
   }
 };
 
-export const getUser = async () => {
+export const getCurrentUser = async () => {
   const response = await account.get();
   if (response.$id) {
     const userAvatar = avatar.getInitials(response.name);

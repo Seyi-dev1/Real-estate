@@ -2,7 +2,7 @@ import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
-import SignInTab from "./signInScreen";
+import { GlobalProvider } from "@/lib/globalProvider";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -23,12 +23,12 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <>
+    <GlobalProvider>
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name={"(tabs)"} />
       </Stack>
-    </>
+    </GlobalProvider>
   );
 }
 

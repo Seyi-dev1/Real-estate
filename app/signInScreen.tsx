@@ -13,16 +13,42 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import images from "@/constants/images";
 import { colors } from "./_layout";
 import icons from "@/constants/icons";
-import { login } from "@/lib/appwrite";
+import { getCurrentUser, login } from "@/lib/appwrite";
+import { useGlobalContext } from "@/lib/globalProvider";
+import { Redirect } from "expo-router";
 
 const SignInScreen = () => {
   const [height, setHeight] = useState<number>(0);
-  const handleLogin = async () => {
-    const result = await login();
 
-    if (result) {
-      console.log("lLogin Successful");
-    } else [Alert.alert("Error", "Failed to login")];
+  const { setError, setUser, setLoading } = useGlobalContext();
+
+  const fetchUserAfterLogin = async () => {
+    const response = await getCurrentUser();
+    if (response) {
+      const { email, $id, name, avatar } = response;
+      const fetchedUser = {
+        email,
+        $id,
+        name,
+        avatar,
+      };
+      // console.log(fetchedUser);
+      setUser(fetchedUser);
+    }
+  };
+  const handleLogin = async () => {
+    try {
+      setLoading();
+      const result = await login();
+
+      if (result) {
+        await fetchUserAfterLogin();
+        setLoading();
+        <Redirect href={"/explore"} />;
+      }
+    } catch (error: any) {
+      setError(error.message);
+    }
   };
   return (
     <SafeAreaView
