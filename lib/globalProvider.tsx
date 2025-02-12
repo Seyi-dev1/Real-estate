@@ -5,8 +5,8 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useAppwrite } from "./useAppwrite";
-import { getCurrentUser } from "./appwrite";
+import { getCurrentUser, avatar } from "./appwrite";
+import { router } from "expo-router";
 
 interface User {
   $id: string;
@@ -51,16 +51,21 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const fetchUser = async () => {
       const response = await getCurrentUser();
       if (response) {
-        const { email, $id, name, avatar } = response;
+        console.log("response");
+        const userAvatar = avatar.getInitials(response.name);
+        const { email, $id, name } = response;
         const fetchedUser = {
           email,
           $id,
           name,
-          avatar,
+          avatar: userAvatar.toString(),
         };
         setUser(fetchedUser);
         setLoading(false);
         setIsLoggedIn(true);
+      } else {
+        setLoading(false);
+        setIsLoggedIn(false);
       }
     };
     fetchUser();

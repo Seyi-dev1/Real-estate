@@ -13,9 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import images from "@/constants/images";
 import { colors } from "./_layout";
 import icons from "@/constants/icons";
-import { getCurrentUser, login } from "@/lib/appwrite";
+import { avatar, getCurrentUser, login } from "@/lib/appwrite";
 import { useGlobalContext } from "@/lib/globalProvider";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 
 const SignInScreen = () => {
   const [height, setHeight] = useState<number>(0);
@@ -25,14 +25,14 @@ const SignInScreen = () => {
   const fetchUserAfterLogin = async () => {
     const response = await getCurrentUser();
     if (response) {
-      const { email, $id, name, avatar } = response;
+      const { email, $id, name } = response;
+      const useAvatar = avatar.getInitials(response.name);
       const fetchedUser = {
         email,
         $id,
         name,
-        avatar,
+        avatar: useAvatar.toString(),
       };
-      // console.log(fetchedUser);
       setUser(fetchedUser);
     }
   };
@@ -44,7 +44,7 @@ const SignInScreen = () => {
       if (result) {
         await fetchUserAfterLogin();
         setLoading();
-        <Redirect href={"/explore"} />;
+        router.replace("/(tabs)");
       }
     } catch (error: any) {
       setError(error.message);
