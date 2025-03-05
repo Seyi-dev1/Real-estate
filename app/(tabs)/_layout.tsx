@@ -57,9 +57,11 @@ const RootLayout = () => {
         tabBarActiveTintColor: "purple",
         headerShown: false,
         tabBarShowLabel: false,
+        tabBarHideOnKeyboard: true,
         tabBarStyle: {
           backgroundColor: "white",
           shadowOpacity: 0,
+          elevation: 0,
           // minHeight: 50,
         },
       }}
