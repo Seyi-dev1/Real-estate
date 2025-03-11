@@ -2,12 +2,14 @@ import { colors } from "@/app/_layout";
 import icons from "@/constants/icons";
 import images from "@/constants/images";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Models } from "react-native-appwrite";
 
 interface Props {
   onPress?: () => void;
+  item: Models.Document;
 }
 
-export const FeaturedCard = ({ onPress }: Props) => {
+export const FeaturedCard = ({ onPress, item }: Props) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -19,7 +21,7 @@ export const FeaturedCard = ({ onPress }: Props) => {
       }}
     >
       <Image
-        source={images.japan}
+        source={{ uri: item.image }}
         style={{ width: "100%", height: "100%", borderRadius: 12 }}
       />
       <Image
@@ -54,7 +56,7 @@ export const FeaturedCard = ({ onPress }: Props) => {
             marginLeft: 3,
           }}
         >
-          4.4
+          {item.rating}
         </Text>
       </View>
       <View
@@ -74,7 +76,7 @@ export const FeaturedCard = ({ onPress }: Props) => {
           }}
           numberOfLines={1}
         >
-          Modern Apartment
+          {item.name}
         </Text>
         <Text
           style={{
@@ -83,7 +85,7 @@ export const FeaturedCard = ({ onPress }: Props) => {
             color: colors.accent[100],
           }}
         >
-          22 W 15th St, New York
+          {item.address}
         </Text>
         <View
           style={{
@@ -96,7 +98,7 @@ export const FeaturedCard = ({ onPress }: Props) => {
           <Text
             style={{ fontFamily: "Rubik-Bold", color: "#fff", fontSize: 13 }}
           >
-            $2,500
+            ${item.price}
           </Text>
           <Image source={icons.heart} style={{ width: 16, height: 16 }} />
         </View>
@@ -105,7 +107,7 @@ export const FeaturedCard = ({ onPress }: Props) => {
   );
 };
 
-export const Card = ({ onPress }: Props) => {
+export const Card = ({ onPress, item }: Props) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -144,11 +146,11 @@ export const Card = ({ onPress }: Props) => {
             marginLeft: 1.5,
           }}
         >
-          4.4
+          {item.rating}
         </Text>
       </View>
       <Image
-        source={images.newYork}
+        source={{ uri: item.image }}
         style={{ width: "100%", height: 100, borderRadius: 10 }}
       />
       <View
@@ -164,7 +166,7 @@ export const Card = ({ onPress }: Props) => {
             fontSize: 13,
           }}
         >
-          Cozy Studio
+          {item.name}
         </Text>
         <Text
           style={{
@@ -174,7 +176,7 @@ export const Card = ({ onPress }: Props) => {
             marginTop: -3,
           }}
         >
-          22 W 15th St, New York
+          {item.address}
         </Text>
         <View
           style={{
@@ -191,7 +193,7 @@ export const Card = ({ onPress }: Props) => {
               fontSize: 12,
             }}
           >
-            $2,500
+            ${item.price}
           </Text>
           <Image
             source={icons.heart}

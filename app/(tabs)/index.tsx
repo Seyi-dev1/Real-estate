@@ -7,24 +7,56 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../_layout";
 import icons from "@/constants/icons";
 import Search from "@/components/search/Search";
 import { Card, FeaturedCard } from "@/components/cards/Cards";
+import FeaturedSkeleton from "@/components/cardSkeletons/FeaturedSkeleton";
 import Filters from "@/components/filter/Filters";
 import { useGlobalContext } from "@/lib/globalProvider";
-import seed from "@/lib/seed";
+import { useLocalSearchParams } from "expo-router";
+import { getLatestProperties, getProperties } from "@/lib/appwrite";
+import Skeleton from "@/components/cardSkeletons/Skeleton";
+import { Models } from "react-native-appwrite";
 
 const Index = () => {
   const { user } = useGlobalContext();
+  const params = useLocalSearchParams<{ query?: string; filter?: string }>();
+  const [properties, setProperties] = React.useState<Models.Document[] | any>(
+    []
+  );
+  const [featuredProperties, setFeaturedProperties] = React.useState<
+    Models.Document[] | any
+  >([1, 2, 3, 4]);
+  const [loading, setLoading] = React.useState(true);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      const data = await getLatestProperties();
+      const data2 = await getProperties({
+        filter: params.filter!,
+        query: params.query!,
+        limit: 6,
+      });
+      if (data && data2) {
+        setProperties(data2);
+        setFeaturedProperties(data);
+        console.log(data?.length);
+        setLoading(false);
+      }
+    };
+    fetchProperties();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={[1, 2, 3, 4]}
-        renderItem={({ item }) => <Card />}
-        keyExtractor={(item) => item.toString()}
+        data={properties}
+        renderItem={({ item }) => {
+          return loading ? <Skeleton /> : <Card item={item} />;
+        }}
+        keyExtractor={(item) => item.$id}
         numColumns={2}
         contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 0 }}
         columnWrapperStyle={{ gap: 10, paddingHorizontal: 10 }}
@@ -86,11 +118,15 @@ const Index = () => {
                 </TouchableOpacity>
               </View>
               <FlatList
-                data={[1, 2, 3]}
+                data={featuredProperties}
                 renderItem={({ item }) => {
-                  return <FeaturedCard />;
+                  return loading ? (
+                    <FeaturedSkeleton />
+                  ) : (
+                    <FeaturedCard item={item} />
+                  );
                 }}
-                keyExtractor={(item) => item.toString()}
+                keyExtractor={(item) => item.$id}
                 horizontal
                 contentContainerStyle={{ gap: 10, marginTop: 10 }}
                 bounces={false}
